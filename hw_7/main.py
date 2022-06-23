@@ -28,13 +28,17 @@ def file_reader():
 
 def get_shop_list_by_dishes(dishes, person_count):
     """БЕРЕТ ВОЗВРАТ ИЗ FILE_READER И ГЕНЕРИРУЕТ СПИСОК ПОКУПОК ДЛЯ 2 ЗАДАЧИ"""
-    cook_book = file_reader()
     shop_list = {}
+    cook_book = file_reader()
     for dish in dishes:
         recipe = cook_book[dish]
         for ingredient in recipe:
-            shop_list[ingredient["ingredient_name"]] = {"measure": ingredient["measure"], "quantity": (int(ingredient["quantity"])*person_count)}
+            if shop_list.get(ingredient["ingredient_name"]) == None:
+                shop_list[ingredient["ingredient_name"]] = {"measure": ingredient["measure"], "quantity": int(ingredient["quantity"])*person_count}
+            else:
+                target_ingredient = shop_list[ingredient["ingredient_name"]]
+                shop_list[ingredient["ingredient_name"]] = {"measure": ingredient["measure"], "quantity": target_ingredient["quantity"] + int(ingredient["quantity"])*person_count}
     return shop_list
 
 
-pprint(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
+pprint(get_shop_list_by_dishes(['Фахитос', 'Омлет'], 2))
